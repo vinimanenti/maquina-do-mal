@@ -326,9 +326,16 @@
     <div class="section-header">
       <span class="section-tag"><i class="fas fa-wallet"></i> FINANCEIRO</span>
       <h2 class="section-title">CONTROLE DE MENSALIDADE</h2>
-      <p class="section-desc">Status de pagamento dos jogadores</p>
+      <p class="section-desc">Vencimento todo dia 30 · Status de pagamento dos jogadores</p>
+    </div>
+    <div class="mens-month-nav">
+      <button class="mens-month-arrow" id="mensPrev"><i class="fas fa-chevron-left"></i></button>
+      <div class="mens-month-display" id="mensMonthDisplay"></div>
+      <button class="mens-month-arrow" id="mensNext"><i class="fas fa-chevron-right"></i></button>
     </div>
     <div class="mensalidade-summary" id="mensalidadeSummary"></div>
+    <div class="mens-deadline-bar" id="mensDeadlineBar"></div>
+    <div class="mens-atrasados-section" id="mensAtrasadosSection"></div>
     <div class="mensalidade-grid" id="mensalidadeGrid"></div>
   </div>
 </section>
@@ -471,19 +478,28 @@
 
       <!-- Admin: Mensalidade -->
       <div class="admin-content" id="adminMensalidade">
-        <h3>Controle de Mensalidade</h3>
-        <div class="admin-form">
-          <input type="number" id="mensalidadeValor" class="admin-input" placeholder="Valor mensal (R$)" min="0">
-          <select id="mensalidadeMes" class="admin-input">
-            <option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option>
-            <option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option>
-            <option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option>
-            <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
-          </select>
-          <select id="mensalidadeAno" class="admin-input">
-            <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
-          </select>
+        <h3><i class="fas fa-wallet"></i> Controle de Mensalidade</h3>
+        <p class="section-desc" style="text-align:left;margin:8px 0 16px">Vencimento dia 30 · Marque o status de cada jogador por mês</p>
+        <div class="admin-form" style="align-items:center">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <label style="font-size:0.8rem;color:var(--text-muted)">Valor R$</label>
+            <input type="number" id="mensalidadeValor" class="admin-input" style="width:100px" placeholder="R$" min="0">
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <label style="font-size:0.8rem;color:var(--text-muted)">Mês/Ano</label>
+            <select id="mensalidadeMes" class="admin-input">
+              <option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option>
+              <option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option>
+              <option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option>
+              <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+            </select>
+            <select id="mensalidadeAno" class="admin-input">
+              <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
+            </select>
+          </div>
+          <button class="btn-gen" id="mensMarcarTodosPago" style="font-size:0.75rem;padding:8px 14px;background:rgba(39,174,96,0.2);border:1px solid rgba(39,174,96,0.3);color:var(--green)"><i class="fas fa-check-double"></i> Todos Pagos</button>
         </div>
+        <div class="mens-admin-summary" id="mensAdminSummary"></div>
         <div class="mensalidade-admin-grid" id="mensalidadeAdminGrid"></div>
         <button class="btn-gen btn-generate" id="saveMensalidade" style="margin-top:16px"><i class="fas fa-save"></i> SALVAR</button>
       </div>

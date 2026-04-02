@@ -769,37 +769,136 @@ window.voteMVP = function(nome) {
 };
 
 // ===== MENSALIDADE =====
+// ===== MENSALIDADE =====
+let mensViewMonth, mensViewYear;
+
 function initMensalidade() {
+  const now = new Date();
+  mensViewMonth = now.getMonth(); // 0-based
+  mensViewYear = now.getFullYear();
+  document.getElementById('mensPrev').addEventListener('click', () => {
+    mensViewMonth--;
+    if (mensViewMonth < 0) { mensViewMonth = 11; mensViewYear--; }
+    renderMensalidade();
+  });
+  document.getElementById('mensNext').addEventListener('click', () => {
+    mensViewMonth++;
+    if (mensViewMonth > 11) { mensViewMonth = 0; mensViewYear++; }
+    renderMensalidade();
+  });
   renderMensalidade();
 }
 
 function renderMensalidade() {
   const grid = document.getElementById('mensalidadeGrid');
   const summary = document.getElementById('mensalidadeSummary');
-  const now = new Date();
-  const mesKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-  const data = LS.get('mensalidade_' + mesKey, {});
+  const deadlineBar = document.getElementById('mensDeadlineBar');
+  const atrasadosSection = document.getElementById('mensAtrasadosSection');
+  const monthDisplay = document.getElementById('mensMonthDisplay');
   const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const mesKey = `${mensViewYear}-${String(mensViewMonth + 1).padStart(2, '0')}`;
+  const data = LS.get('mensalidade_' + mesKey, {});
+  const valor = LS.get('mensalidade_valor', 50);
+  const now = new Date();
+  const isCurrentMonth = mensViewMonth === now.getMonth() && mensViewYear === now.getFullYear();
+  const isPastMonth = new Date(mensViewYear, mensViewMonth + 1, 0) < new Date(now.getFullYear(), now.getMonth(), 1);
+
+  // Month display
+  monthDisplay.innerHTML = `<span class="mens-month-name">${monthNames[mensViewMonth]}</span><span class="mens-month-year">${mensViewYear}</span>`;
+  if (isCurrentMonth) monthDisplay.innerHTML += '<span class="mens-month-current">MÊS ATUAL</span>';
+
+  // Count statuses
   let pagos = 0, pendentes = 0, atrasados = 0;
+  const atrasadosList = [];
   ELENCO.forEach(p => {
-    const status = data[normalizeName(p.nome)] || 'pendente';
+    const key = normalizeName(p.nome);
+    let status = data[key] || 'pendente';
+    // Auto-mark as atrasado if past month and still pendente
+    if (isPastMonth && status === 'pendente') status = 'atrasado';
     if (status === 'pago') pagos++;
-    else if (status === 'atrasado') atrasados++;
+    else if (status === 'atrasado') { atrasados++; atrasadosList.push(p.nome); }
     else pendentes++;
   });
 
-  summary.innerHTML = `
-    <div class="mensalidade-summary-card"><div class="mensalidade-summary-value" style="color:var(--green)">${pagos}</div><div class="mensalidade-summary-label">Pagos</div></div>
-    <div class="mensalidade-summary-card"><div class="mensalidade-summary-value" style="color:var(--orange)">${pendentes}</div><div class="mensalidade-summary-label">Pendentes</div></div>
-    <div class="mensalidade-summary-card"><div class="mensalidade-summary-value" style="color:var(--red-bright)">${atrasados}</div><div class="mensalidade-summary-label">Atrasados</div></div>`;
+  const total = ELENCO.length;
+  const percentPago = total > 0 ? Math.round((pagos / total) * 100) : 0;
 
-  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;margin-bottom:8px;font-family:'Oswald',sans-serif;font-size:1.1rem;color:var(--text-secondary);letter-spacing:2px">${monthNames[now.getMonth()]} ${now.getFullYear()}</div>`;
-  ELENCO.sort((a, b) => a.nome.localeCompare(b.nome)).forEach(p => {
-    const status = data[normalizeName(p.nome)] || 'pendente';
-    const statusLabel = status === 'pago' ? 'Pago' : status === 'atrasado' ? 'Atrasado' : 'Pendente';
+  // Summary cards
+  summary.innerHTML = `
+    <div class="mensalidade-summary-card mens-card-pagos">
+      <div class="mensalidade-summary-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="mensalidade-summary-value" style="color:var(--green)">${pagos}</div>
+      <div class="mensalidade-summary-label">Pagos</div>
+      <div class="mens-progress-bar"><div class="mens-progress-fill mens-fill-green" style="width:${percentPago}%"></div></div>
+      <div class="mens-progress-text">${percentPago}%</div>
+    </div>
+    <div class="mensalidade-summary-card mens-card-pendentes">
+      <div class="mensalidade-summary-icon"><i class="fas fa-clock"></i></div>
+      <div class="mensalidade-summary-value" style="color:var(--orange)">${pendentes}</div>
+      <div class="mensalidade-summary-label">Pendentes</div>
+    </div>
+    <div class="mensalidade-summary-card mens-card-atrasados ${atrasados > 0 ? 'mens-has-atrasados' : ''}">
+      <div class="mensalidade-summary-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="mensalidade-summary-value" style="color:var(--red-bright)">${atrasados}</div>
+      <div class="mensalidade-summary-label">Atrasados</div>
+    </div>
+    <div class="mensalidade-summary-card">
+      <div class="mensalidade-summary-icon"><i class="fas fa-coins"></i></div>
+      <div class="mensalidade-summary-value" style="color:var(--gold)">R$${valor}</div>
+      <div class="mensalidade-summary-label">Valor Mensal</div>
+    </div>`;
+
+  // Deadline bar
+  if (isCurrentMonth) {
+    const daysLeft = 30 - now.getDate();
+    if (daysLeft > 0) {
+      deadlineBar.innerHTML = `<i class="fas fa-calendar-day"></i> Vencimento em <strong>${daysLeft} dia${daysLeft > 1 ? 's' : ''}</strong> (dia 30/${String(mensViewMonth + 1).padStart(2, '0')})`;
+      deadlineBar.className = 'mens-deadline-bar mens-deadline-active';
+    } else if (daysLeft === 0) {
+      deadlineBar.innerHTML = `<i class="fas fa-exclamation-circle"></i> <strong>VENCE HOJE!</strong> dia 30/${String(mensViewMonth + 1).padStart(2, '0')}`;
+      deadlineBar.className = 'mens-deadline-bar mens-deadline-today';
+    } else {
+      deadlineBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Vencimento <strong>expirado</strong> em ${Math.abs(daysLeft)} dia${Math.abs(daysLeft) > 1 ? 's' : ''}`;
+      deadlineBar.className = 'mens-deadline-bar mens-deadline-expired';
+    }
+  } else if (isPastMonth) {
+    deadlineBar.innerHTML = `<i class="fas fa-history"></i> Mês encerrado — vencimento foi em 30/${String(mensViewMonth + 1).padStart(2, '0')}/${mensViewYear}`;
+    deadlineBar.className = 'mens-deadline-bar mens-deadline-past';
+  } else {
+    deadlineBar.innerHTML = `<i class="fas fa-calendar"></i> Vencimento: 30/${String(mensViewMonth + 1).padStart(2, '0')}/${mensViewYear}`;
+    deadlineBar.className = 'mens-deadline-bar mens-deadline-future';
+  }
+
+  // Atrasados highlight section
+  if (atrasados > 0) {
+    atrasadosSection.innerHTML = `
+      <div class="mens-atrasados-card">
+        <div class="mens-atrasados-header"><i class="fas fa-exclamation-triangle"></i> ${atrasados} JOGADOR${atrasados > 1 ? 'ES' : ''} COM MENSALIDADE ATRASADA</div>
+        <div class="mens-atrasados-list">${atrasadosList.map(n => `<span class="mens-atrasado-name"><i class="fas fa-user"></i> ${n}</span>`).join('')}</div>
+        <div class="mens-atrasados-total">Total em aberto: <strong>R$${(atrasados * valor).toFixed(2).replace('.', ',')}</strong></div>
+      </div>`;
+  } else {
+    atrasadosSection.innerHTML = '';
+  }
+
+  // Grid
+  grid.innerHTML = '';
+  const sorted = [...ELENCO].sort((a, b) => {
+    const sa = data[normalizeName(a.nome)] || (isPastMonth ? 'atrasado' : 'pendente');
+    const sb = data[normalizeName(b.nome)] || (isPastMonth ? 'atrasado' : 'pendente');
+    const order = { atrasado: 0, pendente: 1, pago: 2 };
+    return (order[sa] ?? 1) - (order[sb] ?? 1) || a.nome.localeCompare(b.nome);
+  });
+  sorted.forEach(p => {
+    let status = data[normalizeName(p.nome)] || 'pendente';
+    if (isPastMonth && status === 'pendente') status = 'atrasado';
+    const statusLabel = status === 'pago' ? '✓ Pago' : status === 'atrasado' ? '✗ Atrasado' : '● Pendente';
+    const statusIcon = status === 'pago' ? 'check-circle' : status === 'atrasado' ? 'times-circle' : 'clock';
     const item = document.createElement('div');
-    item.className = 'mensalidade-item';
-    item.innerHTML = `<span class="mensalidade-name">${p.nome}</span><span class="mensalidade-status ${status}">${statusLabel}</span>`;
+    item.className = `mensalidade-item mens-item-${status}`;
+    item.innerHTML = `
+      <div class="mensalidade-name"><i class="fas fa-${statusIcon} mens-status-icon mens-icon-${status}"></i>${p.nome}</div>
+      <span class="mensalidade-status ${status}">${statusLabel}</span>`;
     grid.appendChild(item);
   });
 }
@@ -1148,6 +1247,10 @@ function initAdminPanel() {
   // ---- MENSALIDADE ADMIN ----
   const valor = LS.get('mensalidade_valor', 50);
   document.getElementById('mensalidadeValor').value = valor;
+  // Auto-select current month/year
+  const nowM = new Date();
+  document.getElementById('mensalidadeMes').value = String(nowM.getMonth() + 1).padStart(2, '0');
+  document.getElementById('mensalidadeAno').value = String(nowM.getFullYear());
   renderMensalidadeAdmin();
   document.getElementById('saveMensalidade').addEventListener('click', () => {
     const mes = document.getElementById('mensalidadeMes').value;
@@ -1160,10 +1263,16 @@ function initAdminPanel() {
     LS.set('mensalidade_' + key, data);
     LS.set('mensalidade_valor', document.getElementById('mensalidadeValor').value);
     renderMensalidade();
-    alert('Mensalidade salva!');
+    const btn = document.getElementById('saveMensalidade');
+    btn.innerHTML = '<i class="fas fa-check"></i> SALVO!';
+    btn.style.background = '#28a745';
+    setTimeout(() => { btn.innerHTML = '<i class="fas fa-save"></i> SALVAR'; btn.style.background = ''; }, 2500);
   });
   document.getElementById('mensalidadeMes').addEventListener('change', renderMensalidadeAdmin);
   document.getElementById('mensalidadeAno').addEventListener('change', renderMensalidadeAdmin);
+  document.getElementById('mensMarcarTodosPago').addEventListener('click', () => {
+    document.querySelectorAll('#mensalidadeAdminGrid select').forEach(sel => { sel.value = 'pago'; });
+  });
 
   // ---- PLAYER DATA ADMIN (stars + positions + photos) ----
   renderAdminPlayers();
@@ -1253,23 +1362,39 @@ function renderAdminMvpList() {
 
 function renderMensalidadeAdmin() {
   const grid = document.getElementById('mensalidadeAdminGrid');
+  const summaryEl = document.getElementById('mensAdminSummary');
   const mes = document.getElementById('mensalidadeMes').value;
   const ano = document.getElementById('mensalidadeAno').value;
+  const monthNames = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const key = `${ano}-${mes}`;
   const data = LS.get('mensalidade_' + key, {});
+  let pagos = 0, pendentes = 0, atrasados = 0;
+  ELENCO.forEach(p => {
+    const s = data[normalizeName(p.nome)] || 'pendente';
+    if (s === 'pago') pagos++; else if (s === 'atrasado') atrasados++; else pendentes++;
+  });
+  summaryEl.innerHTML = `
+    <div class="mens-admin-summary-bar">
+      <span style="font-family:'Oswald',sans-serif;letter-spacing:1px">${monthNames[parseInt(mes)]} ${ano}</span>
+      <span style="font-size:0.8rem"><span style="color:var(--green)">✓ ${pagos}</span> · <span style="color:var(--orange)">● ${pendentes}</span> · <span style="color:var(--red-bright)">✗ ${atrasados}</span></span>
+    </div>`;
   grid.innerHTML = '';
   ELENCO.sort((a, b) => a.nome.localeCompare(b.nome)).forEach(p => {
     const nKey = normalizeName(p.nome);
     const status = data[nKey] || 'pendente';
     const item = document.createElement('div');
-    item.className = 'mensalidade-admin-item';
+    item.className = `mensalidade-admin-item mens-admin-${status}`;
     item.innerHTML = `
       <span class="admin-player-name">${p.nome}</span>
       <select data-player="${nKey}">
-        <option value="pendente" ${status === 'pendente' ? 'selected' : ''}>Pendente</option>
-        <option value="pago" ${status === 'pago' ? 'selected' : ''}>Pago</option>
-        <option value="atrasado" ${status === 'atrasado' ? 'selected' : ''}>Atrasado</option>
+        <option value="pendente" ${status === 'pendente' ? 'selected' : ''}>⏳ Pendente</option>
+        <option value="pago" ${status === 'pago' ? 'selected' : ''}>✅ Pago</option>
+        <option value="atrasado" ${status === 'atrasado' ? 'selected' : ''}>❌ Atrasado</option>
       </select>`;
+    const sel = item.querySelector('select');
+    sel.addEventListener('change', function() {
+      item.className = `mensalidade-admin-item mens-admin-${this.value}`;
+    });
     grid.appendChild(item);
   });
 }
