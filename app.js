@@ -656,7 +656,7 @@ function initAwards() {
     { icon: '🏆', title: 'Mais Vitórias', player: 'Manenti', detail: '29 vitórias', season: '2024', year: 'y2024' },
     { icon: '📅', title: 'Mais Presente', player: 'Juninho', detail: '49 jogos', season: '2024', year: 'y2024' },
     { icon: '🔥', title: 'Revelação', player: 'Gui Magalhães', detail: '28 gols (12 em Jan)', season: '2024', year: 'y2024' },
-    { icon: '⚽', title: 'Artilheiro', player: 'Kauã Love', detail: '23 gols', season: '2025', year: 'y2025' },
+    { icon: '⚽', title: 'Artilheiro', player: 'Kaue Love', detail: '23 gols', season: '2025', year: 'y2025' },
     { icon: '🎯', title: 'Garçom/Decisivo', player: 'Bruninho', detail: '18 gols (vice-artilheiro)', season: '2025', year: 'y2025' },
     { icon: '💫', title: 'Revelação', player: 'Caporalini', detail: '9 gols (estreia)', season: '2025', year: 'y2025' },
     { icon: '⚽', title: 'Artilheiro', player: 'Douglas Almeida', detail: '18 gols em 11 jogos', season: '2026', year: 'y2026' },

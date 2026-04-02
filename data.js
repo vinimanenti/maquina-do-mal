@@ -6,7 +6,7 @@ const PLAYERS_DATABASE = {
   // ===== GOLS 2024 =====
   gols2024: [
     { nome: "Léo Alves", meses: [5,7,3,6,9,6,2,0,2,0,1,0], total: 41 },
-    { nome: "Kauã Love", meses: [11,3,4,7,0,6,2,0,0,0,1,2], total: 36 },
+    { nome: "Kaue Love", meses: [11,3,4,7,0,6,2,0,0,0,1,2], total: 36 },
     { nome: "Gui Magalhães", meses: [12,0,0,0,0,5,3,0,0,0,8,0], total: 28 },
     { nome: "Biga", meses: [0,1,1,4,5,4,2,0,5,0,2,1], total: 25 },
     { nome: "Guedes", meses: [8,2,1,3,2,1,2,0,2,0,3,0], total: 24 },
@@ -56,7 +56,7 @@ const PLAYERS_DATABASE = {
     { nome: "Francisco", meses: [0,0,1,2,3,1,1,1,1,1,1,0], total: 12 },
     { nome: "Guilherme Peu", meses: [0,0,0,0,1,3,2,0,2,2,0,0], total: 10 },
     { nome: "Cafu", meses: [1,2,3,1,0,1,0,1,1,0,0,0], total: 10 },
-    { nome: "Kauã Love", meses: [4,1,1,1,0,1,1,0,0,0,0,0], total: 9 },
+    { nome: "Kaue Love", meses: [4,1,1,1,0,1,1,0,0,0,0,0], total: 9 },
     { nome: "Lucas Krugner", meses: [0,0,0,0,0,0,3,3,3,0,0,0], total: 9 },
     { nome: "Valdir Alves", meses: [1,2,1,1,1,1,0,1,0,1,0,0], total: 9 },
     { nome: "Peixe", meses: [1,0,0,0,1,2,2,0,2,1,0,0], total: 9 },
@@ -95,7 +95,7 @@ const PLAYERS_DATABASE = {
     { nome: "Guilherme Peu", meses: [0,0,0,0,1,4,4,4,4,5,3,0], total: 25 },
     { nome: "Mancuso", meses: [5,4,4,4,1,3,2,0,0,0,0,0], total: 23 },
     { nome: "Lacerda", meses: [1,2,2,4,3,2,2,3,1,2,1,0], total: 23 },
-    { nome: "Kauã Love", meses: [5,3,1,3,0,4,3,1,0,0,1,1], total: 22 },
+    { nome: "Kaue Love", meses: [5,3,1,3,0,4,3,1,0,0,1,1], total: 22 },
     { nome: "Felipe Gomes", meses: [0,0,0,0,1,5,3,4,4,3,1,1], total: 22 },
     { nome: "Tavinho", meses: [2,0,1,0,0,0,3,4,4,5,2,0], total: 21 },
     { nome: "Valdir Alves", meses: [2,4,2,1,2,4,1,0,1,0,3,1], total: 21 },
@@ -113,7 +113,7 @@ const PLAYERS_DATABASE = {
 
   // ===== GOLS 2025 =====
   gols2025: [
-    { nome: "Kauã Love", meses: [0,6,2,4,2,1,8], total: 23 },
+    { nome: "Kaue Love", meses: [0,6,2,4,2,1,8], total: 23 },
     { nome: "Bruninho", meses: [0,5,3,0,2,3,5], total: 18 },
     { nome: "Danilo Melo", meses: [3,2,2,2,2,4,0], total: 15 },
     { nome: "Léo Kekel", meses: [0,3,5,5,0,0,0], total: 13 },
@@ -164,7 +164,7 @@ const PLAYERS_DATABASE = {
     { nome: "Juninho", v:3, e:1, d:2, pts:10, pd:6, apr:55.6 },
     { nome: "Danilo Melo", v:2, e:3, d:4, pts:9, pd:9, apr:33.3 },
     { nome: "Vardo", v:2, e:3, d:4, pts:9, pd:9, apr:33.3 },
-    { nome: "Kauã Love", v:2, e:1, d:1, pts:7, pd:4, apr:58.3 },
+    { nome: "Kaue Love", v:2, e:1, d:1, pts:7, pd:4, apr:58.3 },
     { nome: "Felipe Gomes", v:2, e:1, d:3, pts:7, pd:6, apr:38.9 },
     { nome: "Renato Reis", v:2, e:1, d:2, pts:7, pd:5, apr:46.7 },
     { nome: "Diego Buiu", v:2, e:1, d:1, pts:7, pd:4, apr:58.3 },
@@ -192,7 +192,7 @@ const PLAYERS_DATABASE = {
     { nome: "Velto", pd:10, gols:12, meses:[6,4,2] },
     { nome: "Gaia", pd:9, gols:8, meses:[1,1,6] },
     { nome: "Cuca", pd:11, gols:8, meses:[2,3,3] },
-    { nome: "Kauã Love", pd:4, gols:6, meses:[3,0,3] },
+    { nome: "Kaue Love", pd:4, gols:6, meses:[3,0,3] },
     { nome: "Léo Kekel", pd:6, gols:5, meses:[0,1,4] },
     { nome: "André Silva", pd:9, gols:4, meses:[3,1,0] },
     { nome: "Simão", pd:8, gols:4, meses:[3,1,0] },
@@ -234,7 +234,7 @@ const PLAYERS_DATABASE = {
     { nome: "Danilo Melo", pd:9, destaques:2 },
     { nome: "Diego Buiu", pd:7, destaques:2 },
     { nome: "Igor N.", pd:8, destaques:2 },
-    { nome: "Kauã Love", pd:4, destaques:2 },
+    { nome: "Kaue Love", pd:4, destaques:2 },
     { nome: "André Silva", pd:9, destaques:1 },
     { nome: "Bambu", pd:8, destaques:1 },
     { nome: "Caporalini", pd:2, destaques:1 },
@@ -263,7 +263,7 @@ const PLAYERS_DATABASE = {
 // Rating baseado em: gols totais, vitórias, presença, pontos corridos
 const ELENCO = [
   { id: 1, nome: "Bruninho", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2025","lider-2026"] },
-  { id: 2, nome: "Kauã Love", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2025"] },
+  { id: 2, nome: "Kaue Love", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2025"] },
   { id: 3, nome: "Douglas Almeida", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2026"] },
   { id: 4, nome: "Danilo Melo", estrelas: 4, posicao: "Meia/Atacante", badges: [] },
   { id: 5, nome: "Léo Kekel", estrelas: 4, posicao: "Meia", badges: [] },
