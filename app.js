@@ -2,11 +2,83 @@
 // MÁQUINA DO MAL — APP.JS (COMPLETO)
 // ============================================================
 
-// ===== LOCAL STORAGE HELPERS =====
+// ===== SUPABASE CONFIG =====
+var _sbClient = null;
+try {
+  const _SB_URL = 'https://mqupvcuwknrmlfoxmmpz.supabase.co';
+  const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xdXB2Y3V3a25ybWxmb3htbXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjE0MzAsImV4cCI6MjA5MDczNzQzMH0.lv7UB6ncQ7EmNFHARDVly2SGku6A3PMxbEpWmcE4lMI';
+  if (window.supabase && window.supabase.createClient) {
+    _sbClient = window.supabase.createClient(_SB_URL, _SB_KEY);
+    console.log('Supabase client initialized');
+  }
+} catch(e) { console.warn('Supabase init failed:', e); }
+
+// ===== CLOUD SYNC MODULE =====
+var CloudSync = {
+  _queue: [],
+  _processing: false,
+  _ready: false,
+
+  async loadAll() {
+    if (!_sbClient) { console.warn('CloudSync: no Supabase client'); return; }
+    try {
+      const { data, error } = await _sbClient.from('app_data').select('key, value');
+      if (error) { console.warn('CloudSync loadAll error:', error); return; }
+      if (data && data.length > 0) {
+        data.forEach(row => {
+          localStorage.setItem('mdm_' + row.key, JSON.stringify(row.value));
+        });
+        console.log('CloudSync: loaded ' + data.length + ' keys from cloud');
+      }
+      this._ready = true;
+    } catch (e) { console.warn('CloudSync loadAll exception:', e); }
+  },
+
+  save(key, val) {
+    if (!_sbClient) return;
+    this._queue.push({ action: 'upsert', key, val });
+    this._processQueue();
+  },
+
+  remove(key) {
+    if (!_sbClient) return;
+    this._queue.push({ action: 'delete', key });
+    this._processQueue();
+  },
+
+  async _processQueue() {
+    if (this._processing) return;
+    this._processing = true;
+    while (this._queue.length > 0) {
+      const job = this._queue.shift();
+      try {
+        if (job.action === 'upsert') {
+          await _sbClient.from('app_data').upsert(
+            { key: job.key, value: job.val, updated_at: new Date().toISOString() },
+            { onConflict: 'key' }
+          );
+        } else if (job.action === 'delete') {
+          await _sbClient.from('app_data').delete().eq('key', job.key);
+        }
+      } catch (e) { console.warn('CloudSync error:', e); }
+    }
+    this._processing = false;
+  }
+};
+
+// ===== LOCAL STORAGE HELPERS (with Cloud Sync) =====
 const LS = {
-  get: (key, def = null) => { try { const v = localStorage.getItem('mdm_' + key); return v ? JSON.parse(v) : def; } catch { return def; } },
-  set: (key, val) => { localStorage.setItem('mdm_' + key, JSON.stringify(val)); },
-  remove: (key) => { localStorage.removeItem('mdm_' + key); }
+  get: (key, def = null) => {
+    try { const v = localStorage.getItem('mdm_' + key); return v ? JSON.parse(v) : def; } catch { return def; }
+  },
+  set: (key, val) => {
+    localStorage.setItem('mdm_' + key, JSON.stringify(val));
+    CloudSync.save(key, val);
+  },
+  remove: (key) => {
+    localStorage.removeItem('mdm_' + key);
+    CloudSync.remove(key);
+  }
 };
 
 // Current modal player
@@ -14,7 +86,9 @@ let currentModalPlayer = null;
 
 const POSICOES_LIST = ['Goleiro','Zaga','Lateral','Volante','Meio-campo','Atacante'];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load cloud data first, then initialize UI
+  await CloudSync.loadAll();
   loadCustomPlayers();
   initPWA();
   initNavbar();
