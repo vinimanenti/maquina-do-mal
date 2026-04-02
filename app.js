@@ -103,7 +103,64 @@ function renamePlayer(oldName, newName) {
   if (stars[oldKey]) { stars[newKey] = stars[oldKey]; delete stars[oldKey]; LS.set('stars', stars); }
   const positions = LS.get('positions', {});
   if (positions[oldKey]) { positions[newKey] = positions[oldKey]; delete positions[oldKey]; LS.set('positions', positions); }
+  // Migrate match results (player lists, goals, mvps)
+  migrateNameInMatches(oldName, newName);
+  // Migrate MVP history
+  migrateNameInMvpHistory(oldName, newName);
+  // Migrate mensalidade data
+  migrateNameInMensalidade(oldKey, newKey);
   rebuildAllUI();
+}
+
+function migrateNameInMatches(oldName, newName) {
+  const matches = LS.get('match_results', []);
+  let changed = false;
+  const oldN = normalizeName(oldName);
+  matches.forEach(m => {
+    ['team1', 'team2'].forEach(t => {
+      if (m[t].players) {
+        const idx = m[t].players.findIndex(p => normalizeName(p) === oldN);
+        if (idx !== -1) { m[t].players[idx] = newName; changed = true; }
+      }
+    });
+    if (m.goals && m.goals[oldName] !== undefined) {
+      m.goals[newName] = m.goals[oldName];
+      delete m.goals[oldName];
+      changed = true;
+    }
+    if (m.mvps) {
+      const mvpIdx = m.mvps.findIndex(p => normalizeName(p) === oldN);
+      if (mvpIdx !== -1) { m.mvps[mvpIdx] = newName; changed = true; }
+    }
+  });
+  if (changed) LS.set('match_results', matches);
+}
+
+function migrateNameInMvpHistory(oldName, newName) {
+  const history = LS.get('mvp_history', []);
+  let changed = false;
+  const oldN = normalizeName(oldName);
+  history.forEach(h => {
+    if (normalizeName(h.player) === oldN) { h.player = newName; changed = true; }
+  });
+  if (changed) LS.set('mvp_history', history);
+}
+
+function migrateNameInMensalidade(oldKey, newKey) {
+  // Iterate all mensalidade keys in localStorage
+  for (let i = 0; i < localStorage.length; i++) {
+    const lsKey = localStorage.key(i);
+    if (lsKey && lsKey.startsWith('mdm_mensalidade_') && lsKey !== 'mdm_mensalidade_valor') {
+      try {
+        const data = JSON.parse(localStorage.getItem(lsKey));
+        if (data && data[oldKey] !== undefined) {
+          data[newKey] = data[oldKey];
+          delete data[oldKey];
+          localStorage.setItem(lsKey, JSON.stringify(data));
+        }
+      } catch(e) {}
+    }
+  }
 }
 
 function deletePlayer(nome) {
@@ -164,8 +221,15 @@ function rebuildAllUI() {
     opt.value = p.nome; opt.textContent = p.nome;
     mvpSelect.appendChild(opt);
   });
-  // Rebuild mensalidade admin
+  // Rebuild mensalidade
+  renderMensalidade();
   renderMensalidadeAdmin();
+  // Rebuild match history
+  renderMatches();
+  renderAdminMatchList();
+  // Rebuild MVP
+  renderMVP();
+  renderAdminMvpList();
   // Rebuild admin players
   renderAdminPlayers();
   // Refresh stats
