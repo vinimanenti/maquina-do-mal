@@ -1,0 +1,14 @@
+{
+  "name": "Máquina do Mal Team",
+  "short_name": "MDM Team",
+  "description": "Futebol semanal desde 2022 — Estatísticas, Elenco e Sorteio de Times",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#8B0000",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

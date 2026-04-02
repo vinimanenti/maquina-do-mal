@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Máquina do Mal Team — Estatísticas & Elenco</title>
+  <meta name="description" content="Máquina do Mal Team — Futebol semanal desde 2022">
+  <meta name="theme-color" content="#8B0000">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="#hero" class="nav-logo">
+      <img src="logo.png" alt="Máquina do Mal" class="nav-logo-img">
+      <span>MÁQUINA DO MAL</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero">Início</a></li>
+      <li><a href="#elenco">Elenco</a></li>
+      <li><a href="#estatisticas">Estatísticas</a></li>
+      <li><a href="#premiacoes">Premiações</a></li>
+      <li><a href="#historico">Histórico</a></li>
+      <li><a href="#resenha">Resenha</a></li>
+      <li><a href="#admin" class="nav-admin"><i class="fas fa-lock"></i> Admin</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-bg-overlay"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+  <div class="hero-content">
+    <img src="logo.png" alt="Máquina do Mal" class="hero-logo">
+    <h1 class="hero-title">MÁQUINA DO MAL</h1>
+    <p class="hero-subtitle">TEAM · EST. 2022</p>
+    <div class="hero-stats-bar">
+      <div class="hero-stat">
+        <span class="hero-stat-number" data-count="42">0</span>
+        <span class="hero-stat-label">Jogadores</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number" data-count="3">0</span>
+        <span class="hero-stat-label">Temporadas</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number" data-count="500">0</span>
+        <span class="hero-stat-label">Gols Marcados</span>
+      </div>
+    </div>
+    <a href="#elenco" class="hero-cta">
+      <span>VER ELENCO</span>
+      <i class="fas fa-chevron-down"></i>
+    </a>
+    <!-- PWA Install -->
+    <button class="pwa-install-btn" id="pwaInstall" style="display:none">
+      <i class="fas fa-download"></i> Instalar App
+    </button>
+  </div>
+</section>
+
+<!-- ===== ELENCO ===== -->
+<section class="section elenco" id="elenco">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-users"></i> ELENCO</span>
+      <h2 class="section-title">JOGADORES</h2>
+      <p class="section-desc">Clique em um jogador para ver estatísticas detalhadas</p>
+    </div>
+    <div class="elenco-filters">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="5">⭐ 5 Estrelas</button>
+      <button class="filter-btn" data-filter="4">⭐ 4 Estrelas</button>
+      <button class="filter-btn" data-filter="3">⭐ 3 Estrelas</button>
+      <button class="filter-btn" data-filter="2">⭐ 2 Estrelas</button>
+      <button class="filter-btn" data-filter="1">⭐ 1 Estrela</button>
+    </div>
+    <div class="players-grid" id="playersGrid"></div>
+  </div>
+</section>
+
+<!-- ===== PLAYER MODAL ===== -->
+<div class="modal-overlay" id="playerModal">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-header">
+      <div class="modal-avatar" id="modalAvatar"><i class="fas fa-user"></i></div>
+      <div class="modal-player-info">
+        <h3 id="modalName"></h3>
+        <div class="modal-stars" id="modalStars"></div>
+        <span class="modal-badge" id="modalBadge"></span>
+      </div>
+    </div>
+    <div class="modal-stats-grid">
+      <div class="modal-stat-card"><i class="fas fa-futbol"></i><span class="modal-stat-value" id="modalGols2024">—</span><span class="modal-stat-label">Gols 2024</span></div>
+      <div class="modal-stat-card"><i class="fas fa-trophy"></i><span class="modal-stat-value" id="modalVitorias2024">—</span><span class="modal-stat-label">Vitórias 2024</span></div>
+      <div class="modal-stat-card"><i class="fas fa-calendar-check"></i><span class="modal-stat-value" id="modalJogos2024">—</span><span class="modal-stat-label">Jogos 2024</span></div>
+      <div class="modal-stat-card"><i class="fas fa-futbol"></i><span class="modal-stat-value" id="modalGols2025">—</span><span class="modal-stat-label">Gols 2025</span></div>
+      <div class="modal-stat-card"><i class="fas fa-futbol"></i><span class="modal-stat-value" id="modalGols2026">—</span><span class="modal-stat-label">Gols 2026</span></div>
+      <div class="modal-stat-card"><i class="fas fa-chart-line"></i><span class="modal-stat-value" id="modalPontos2026">—</span><span class="modal-stat-label">Pontos 2026</span></div>
+      <div class="modal-stat-card"><i class="fas fa-trophy" style="color:var(--gold)"></i><span class="modal-stat-value" id="modalMvp">—</span><span class="modal-stat-label">MVP</span></div>
+    </div>
+    <!-- Evolution Chart -->
+    <div class="modal-chart-section">
+      <h4>Evolução de Gols por Temporada</h4>
+      <div class="modal-evolution-chart" id="modalEvolutionChart"></div>
+    </div>
+    <div class="modal-chart-section">
+      <h4 id="modalChartTitle">Desempenho Mensal</h4>
+      <div class="modal-chart" id="modalChart"></div>
+    </div>
+    <!-- Positions display -->
+    <div class="modal-positions" id="modalPositions"></div>
+  </div>
+</div>
+
+<!-- ===== ESTATÍSTICAS ===== -->
+<section class="section stats-section" id="estatisticas">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-chart-bar"></i> ESTATÍSTICAS</span>
+      <h2 class="section-title">NÚMEROS DO TIME</h2>
+    </div>
+
+    <!-- Season Hero Banner — 2026 -->
+    <div class="season-hero">
+      <div class="season-hero-bg"></div>
+      <div class="season-hero-content">
+        <div class="season-hero-year">2026</div>
+        <div class="season-hero-label">TEMPORADA ATUAL</div>
+        <div class="season-hero-numbers" id="seasonHeroNumbers">
+          <div class="season-number-item">
+            <span class="season-number-value" id="seasonTotalGols">0</span>
+            <span class="season-number-label">GOLS</span>
+          </div>
+          <div class="season-number-divider"></div>
+          <div class="season-number-item">
+            <span class="season-number-value" id="seasonTotalJogos">0</span>
+            <span class="season-number-label">PARTIDAS</span>
+          </div>
+          <div class="season-number-divider"></div>
+          <div class="season-number-item">
+            <span class="season-number-value" id="seasonTotalJogadores">0</span>
+            <span class="season-number-label">JOGADORES</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top 3 Podium — Current Year -->
+    <div class="season-podium">
+      <div class="podium-card podium-gold">
+        <div class="podium-rank">👑</div>
+        <div class="podium-player">Bruninho</div>
+        <div class="podium-title">Líder Pontos Corridos</div>
+        <div class="podium-stat">24 pts · 66.7%</div>
+      </div>
+      <div class="podium-card podium-red">
+        <div class="podium-rank">⚽</div>
+        <div class="podium-player">Douglas Almeida</div>
+        <div class="podium-title">Artilheiro 2026</div>
+        <div class="podium-stat">18 gols em 11 jogos</div>
+      </div>
+      <div class="podium-card podium-silver">
+        <div class="podium-rank">📊</div>
+        <div class="podium-player">Marcos Vinícius</div>
+        <div class="podium-title">Maior Aproveitamento</div>
+        <div class="podium-stat">72.2% · 6 jogos</div>
+      </div>
+    </div>
+
+    <!-- Year Tabs -->
+    <div class="stats-tabs">
+      <button class="stats-tab active" data-tab="stats2026"><i class="fas fa-fire"></i> 2026</button>
+      <button class="stats-tab" data-tab="stats2025">2025</button>
+      <button class="stats-tab" data-tab="stats2024">2024</button>
+    </div>
+
+    <!-- 2026 -->
+    <div class="stats-panel active" id="stats2026">
+      <h3 class="table-title table-title-main"><i class="fas fa-trophy"></i> Classificação — Pontos Corridos 2026</h3>
+      <div class="table-wrapper table-wrapper-main"><table class="stats-table stats-table-main" id="tablePC2026"><thead><tr><th>#</th><th>Jogador</th><th>V</th><th>E</th><th>D</th><th>PTS</th><th>PD</th><th>APR%</th></tr></thead><tbody></tbody></table></div>
+
+      <div class="stats-secondary-grid">
+        <div>
+          <h3 class="table-title"><i class="fas fa-futbol"></i> Artilharia 2026</h3>
+          <div class="table-wrapper"><table class="stats-table" id="tableArt2026"><thead><tr><th>#</th><th>Jogador</th><th>PD</th><th>Gols</th><th>Jan</th><th>Fev</th><th>Mar</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div>
+          <h3 class="table-title"><i class="fas fa-star"></i> Ranking MVP 2026</h3>
+          <div class="table-wrapper"><table class="stats-table" id="tableMvp2026"><thead><tr><th>#</th><th>Jogador</th><th>PD</th><th>MVP</th><th>%</th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2025 -->
+    <div class="stats-panel" id="stats2025">
+      <div class="stats-cards-row">
+        <div class="stat-highlight-card"><div class="stat-highlight-icon"><i class="fas fa-futbol"></i></div><div class="stat-highlight-value">Kauã Love</div><div class="stat-highlight-label">Artilheiro 2025</div><div class="stat-highlight-detail">23 gols</div></div>
+        <div class="stat-highlight-card"><div class="stat-highlight-icon"><i class="fas fa-fire"></i></div><div class="stat-highlight-value">Bruninho</div><div class="stat-highlight-label">Vice-Artilheiro</div><div class="stat-highlight-detail">18 gols</div></div>
+        <div class="stat-highlight-card"><div class="stat-highlight-icon"><i class="fas fa-star"></i></div><div class="stat-highlight-value">Danilo Melo</div><div class="stat-highlight-label">3º Artilheiro</div><div class="stat-highlight-detail">15 gols</div></div>
+      </div>
+      <h3 class="table-title"><i class="fas fa-futbol"></i> Artilharia 2025</h3>
+      <div class="table-wrapper"><table class="stats-table" id="tableGols2025"><thead><tr><th>#</th><th>Jogador</th><th>Total</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="stats-panel" id="stats2024">
+      <div class="stats-cards-row">
+        <div class="stat-highlight-card"><div class="stat-highlight-icon"><i class="fas fa-futbol"></i></div><div class="stat-highlight-value">Léo Alves</div><div class="stat-highlight-label">Artilheiro 2024</div><div class="stat-highlight-detail">41 gols</div></div>
+        <div class="stat-highlight-card"><div class="stat-highlight-icon"><i class="fas fa-trophy"></i></div><div class="stat-highlight-value">Manenti</div><div class="stat-highlight-label">Mais Vitórias</div><div class="stat-highlight-detail">29 vitórias</div></div>
+        <div class="stat-highlight-card"><div class="stat-highlight-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-highlight-value">Juninho</div><div class="stat-highlight-label">Mais Presente</div><div class="stat-highlight-detail">49 jogos disputados</div></div>
+      </div>
+      <h3 class="table-title"><i class="fas fa-futbol"></i> Artilharia 2024</h3>
+      <div class="table-wrapper"><table class="stats-table" id="tableGols2024"><thead><tr><th>#</th><th>Jogador</th><th>Total</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Set</th><th>Nov</th><th>Dez</th></tr></thead><tbody></tbody></table></div>
+      <h3 class="table-title"><i class="fas fa-trophy"></i> Vitórias 2024</h3>
+      <div class="table-wrapper"><table class="stats-table" id="tableVit2024"><thead><tr><th>#</th><th>Jogador</th><th>Total</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th></tr></thead><tbody></tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PREMIAÇÕES ===== -->
+<section class="section premiacoes-section" id="premiacoes">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-award"></i> PREMIAÇÕES</span>
+      <h2 class="section-title">HALL DA FAMA</h2>
+      <p class="section-desc">Destaques automáticos de cada temporada</p>
+    </div>
+    <div class="awards-grid" id="awardsGrid"></div>
+  </div>
+</section>
+
+<!-- ===== HISTÓRICO DE CONFRONTOS ===== -->
+<section class="section historico-section" id="historico">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-scroll"></i> HISTÓRICO</span>
+      <h2 class="section-title">CONFRONTOS</h2>
+      <p class="section-desc">Resultados das peladas semanais</p>
+    </div>
+    <div class="match-stats-summary" id="matchStatsSummary"></div>
+    <div class="match-list" id="matchList">
+      <div class="empty-state">
+        <i class="fas fa-futbol"></i>
+        <p>Nenhum confronto registrado ainda.</p>
+        <p class="empty-hint">Use o Painel Admin para adicionar resultados.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RESENHA / COMPARAÇÃO ===== -->
+<section class="section resenha-section" id="resenha">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-balance-scale"></i> RESENHA</span>
+      <h2 class="section-title">COMPARAR JOGADORES</h2>
+      <p class="section-desc">Escolha dois jogadores e compare os números</p>
+    </div>
+    <div class="resenha-container">
+      <div class="resenha-selectors">
+        <div class="resenha-selector">
+          <select class="resenha-select" id="resenhaPlayer1">
+            <option value="">Selecione o jogador 1</option>
+          </select>
+        </div>
+        <div class="resenha-vs"><span>VS</span></div>
+        <div class="resenha-selector">
+          <select class="resenha-select" id="resenhaPlayer2">
+            <option value="">Selecione o jogador 2</option>
+          </select>
+        </div>
+      </div>
+      <div class="resenha-result" id="resenhaResult">
+        <div class="resenha-empty">
+          <i class="fas fa-users"></i>
+          <p>Selecione dois jogadores para comparar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MVP VOTING ===== -->
+<section class="section mvp-section" id="mvp">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-star"></i> VOTAÇÃO</span>
+      <h2 class="section-title">MVP DA RODADA</h2>
+      <p class="section-desc">Vote no melhor jogador da última pelada</p>
+    </div>
+    <div class="mvp-container">
+      <div class="mvp-current" id="mvpCurrent">
+        <div class="empty-state">
+          <i class="fas fa-vote-yea"></i>
+          <p>Nenhuma votação ativa.</p>
+          <p class="empty-hint">Inicie uma votação pelo Painel Admin.</p>
+        </div>
+      </div>
+      <div class="mvp-history">
+        <h3 class="table-title"><i class="fas fa-history"></i> MVPs Anteriores</h3>
+        <div class="mvp-history-list" id="mvpHistoryList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENSALIDADE ===== -->
+<section class="section mensalidade-section" id="mensalidade">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-wallet"></i> FINANCEIRO</span>
+      <h2 class="section-title">CONTROLE DE MENSALIDADE</h2>
+      <p class="section-desc">Status de pagamento dos jogadores</p>
+    </div>
+    <div class="mensalidade-summary" id="mensalidadeSummary"></div>
+    <div class="mensalidade-grid" id="mensalidadeGrid"></div>
+  </div>
+</section>
+
+<!-- ===== PAINEL ADMIN ===== -->
+<section class="section admin-section" id="admin">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"><i class="fas fa-shield-alt"></i> ADMIN</span>
+      <h2 class="section-title">PAINEL DE CONTROLE</h2>
+      <p class="section-desc">Gerencie o time sem mexer no código</p>
+    </div>
+    <div class="admin-login" id="adminLogin">
+      <div class="admin-login-card">
+        <i class="fas fa-lock"></i>
+        <h3>Acesso Restrito</h3>
+        <input type="password" id="adminPassword" placeholder="Senha do admin" class="admin-input">
+        <button class="btn-gen btn-generate" id="adminLoginBtn">ENTRAR</button>
+        <p class="admin-hint">Senha padrão: mdm2022</p>
+      </div>
+    </div>
+    <div class="admin-panel" id="adminPanel" style="display:none">
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-admin="adminSorteio"><i class="fas fa-dice"></i> Sortear Times</button>
+        <button class="admin-tab" data-admin="adminPlayers"><i class="fas fa-users"></i> Jogadores</button>
+        <button class="admin-tab" data-admin="adminMatch"><i class="fas fa-futbol"></i> Confrontos</button>
+        <button class="admin-tab" data-admin="adminMvp"><i class="fas fa-star"></i> MVP</button>
+        <button class="admin-tab" data-admin="adminMensalidade"><i class="fas fa-wallet"></i> Mensalidade</button>
+      </div>
+
+      <!-- Admin: Sorteio de Times -->
+      <div class="admin-content active" id="adminSorteio">
+        <h3><i class="fas fa-dice"></i> Gerador de Times Equilibrados</h3>
+        <p class="section-desc" style="text-align:left;margin:8px 0 20px">Times equilibrados por estrelas e posições</p>
+        <div class="generator-controls">
+          <div class="gen-config">
+            <label>Jogadores por time:</label>
+            <select id="playersPerTeam"><option value="5">5</option><option value="6" selected>6</option><option value="7">7</option><option value="8">8</option><option value="11">11</option></select>
+          </div>
+          <div class="gen-actions">
+            <button class="btn-gen btn-select-all" id="btnSelectAll">Selecionar Todos</button>
+            <button class="btn-gen btn-clear" id="btnClear">Limpar</button>
+            <button class="btn-gen btn-whatsapp" id="btnShareTeams" style="display:none"><i class="fab fa-whatsapp"></i> Compartilhar</button>
+            <button class="btn-gen btn-generate" id="btnGenerate"><i class="fas fa-dice"></i> SORTEAR TIMES</button>
+          </div>
+        </div>
+        <div class="gen-player-select" id="genPlayerSelect"></div>
+        <div class="gen-results" id="genResults"></div>
+      </div>
+
+      <!-- Admin: Jogadores (estrelas, posições, fotos) -->
+      <div class="admin-content" id="adminPlayers">
+        <h3><i class="fas fa-users"></i> Gerenciar Elenco</h3>
+        <p class="section-desc" style="text-align:left;margin:8px 0 20px">Adicionar, editar, excluir jogadores · Estrelas, posições e fotos</p>
+        <div class="admin-players-list" id="adminPlayersList"></div>
+        <button class="btn-gen btn-generate" id="savePlayerData" style="margin-top:16px"><i class="fas fa-save"></i> SALVAR TUDO</button>
+      </div>
+
+      <!-- Admin: Confrontos -->
+      <div class="admin-content" id="adminMatch">
+        <h3><i class="fas fa-futbol"></i> Registrar Partida da Semana</h3>
+        <p class="section-desc" style="text-align:left;margin:8px 0 20px">Registre o resultado completo com jogadores e gols</p>
+
+        <div class="match-form-card">
+          <div class="admin-form">
+            <input type="date" id="matchDate" class="admin-input">
+            <button class="btn-gen btn-import-sorteio" id="btnImportSorteio"><i class="fas fa-file-import"></i> Importar do Último Sorteio</button>
+          </div>
+
+          <div class="match-teams-setup" id="matchTeamsSetup">
+            <!-- TIME 1 -->
+            <div class="match-team-panel">
+              <div class="match-team-panel-header team1-header">
+                <input type="text" id="matchTeam1Name" class="admin-input match-team-name-input" placeholder="Nome do Time 1" value="TIME VERMELHO">
+                <div class="match-score-input">
+                  <label>Placar</label>
+                  <input type="number" id="matchScore1" class="admin-input score-input-lg" placeholder="0" min="0" value="0">
+                </div>
+              </div>
+              <div class="match-team-players-label">Selecione os jogadores:</div>
+              <div class="match-team-player-select" id="matchTeam1Players"></div>
+              <div class="match-team-goals-label" style="display:none">Gols por jogador:</div>
+              <div class="match-team-goals" id="matchTeam1Goals"></div>
+            </div>
+
+            <!-- TIME 2 -->
+            <div class="match-team-panel">
+              <div class="match-team-panel-header team2-header">
+                <input type="text" id="matchTeam2Name" class="admin-input match-team-name-input" placeholder="Nome do Time 2" value="TIME AZUL">
+                <div class="match-score-input">
+                  <label>Placar</label>
+                  <input type="number" id="matchScore2" class="admin-input score-input-lg" placeholder="0" min="0" value="0">
+                </div>
+              </div>
+              <div class="match-team-players-label">Selecione os jogadores:</div>
+              <div class="match-team-player-select" id="matchTeam2Players"></div>
+              <div class="match-team-goals-label" style="display:none">Gols por jogador:</div>
+              <div class="match-team-goals" id="matchTeam2Goals"></div>
+            </div>
+          </div>
+
+          <!-- MVP Selection -->
+          <div class="match-mvp-section">
+            <h4><i class="fas fa-trophy"></i> MVP da Partida <span style="font-size:0.7rem;color:var(--text-muted);font-weight:400">(2 por time)</span></h4>
+            <div class="match-mvp-grid">
+              <div class="match-mvp-team">
+                <label class="match-mvp-label" id="mvpTeam1Label">TIME 1</label>
+                <select class="admin-input match-mvp-select" id="matchMvp1A"><option value="">— MVP 1 —</option></select>
+                <select class="admin-input match-mvp-select" id="matchMvp1B"><option value="">— MVP 2 —</option></select>
+              </div>
+              <div class="match-mvp-team">
+                <label class="match-mvp-label" id="mvpTeam2Label">TIME 2</label>
+                <select class="admin-input match-mvp-select" id="matchMvp2A"><option value="">— MVP 1 —</option></select>
+                <select class="admin-input match-mvp-select" id="matchMvp2B"><option value="">— MVP 2 —</option></select>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-gen btn-generate" id="addMatch" style="width:100%"><i class="fas fa-save"></i> REGISTRAR PARTIDA</button>
+        </div>
+
+        <h3 style="margin-top:32px"><i class="fas fa-history"></i> Partidas Registradas</h3>
+        <div class="admin-list" id="adminMatchList"></div>
+      </div>
+
+      <!-- Admin: MVP -->
+      <div class="admin-content" id="adminMvp">
+        <h3>Iniciar Votação MVP</h3>
+        <div class="admin-form">
+          <input type="date" id="mvpDate" class="admin-input">
+          <select id="mvpPlayerSelect" class="admin-input"></select>
+          <button class="btn-gen btn-generate" id="addMvpWinner"><i class="fas fa-trophy"></i> REGISTRAR MVP</button>
+        </div>
+        <h3 style="margin-top:24px">Votação Aberta</h3>
+        <div class="admin-form">
+          <label class="admin-checkbox"><input type="checkbox" id="mvpVotingActive"> Ativar votação para jogadores</label>
+        </div>
+        <div class="admin-list" id="adminMvpList"></div>
+      </div>
+
+      <!-- Admin: Mensalidade -->
+      <div class="admin-content" id="adminMensalidade">
+        <h3>Controle de Mensalidade</h3>
+        <div class="admin-form">
+          <input type="number" id="mensalidadeValor" class="admin-input" placeholder="Valor mensal (R$)" min="0">
+          <select id="mensalidadeMes" class="admin-input">
+            <option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option>
+            <option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option>
+            <option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option>
+            <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+          </select>
+          <select id="mensalidadeAno" class="admin-input">
+            <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
+          </select>
+        </div>
+        <div class="mensalidade-admin-grid" id="mensalidadeAdminGrid"></div>
+        <button class="btn-gen btn-generate" id="saveMensalidade" style="margin-top:16px"><i class="fas fa-save"></i> SALVAR</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <img src="logo.png" alt="Máquina do Mal" class="footer-logo">
+      <div class="footer-text">
+        <h3>MÁQUINA DO MAL TEAM</h3>
+        <p>Futebol semanal desde 2022</p>
+        <div class="footer-social">
+          <a href="#" id="footerWhatsApp" class="social-link" title="Grupo WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p class="footer-copy">&copy; 2026 Máquina do Mal. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float Button -->
+<a class="whatsapp-float" id="whatsappFloat" href="#" target="_blank" title="Grupo WhatsApp">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
