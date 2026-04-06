@@ -305,6 +305,8 @@ const ELENCO = [
   { id: 40, nome: "Diego Farias", estrelas: 1, posicao: "Meia", badges: [] },
   { id: 41, nome: "Tiaguinho", estrelas: 1, posicao: "Defensor", badges: [] },
   { id: 42, nome: "Léo Alves", estrelas: 5, posicao: "Atacante", badges: [] },
+  { id: 43, nome: "Jhonnatan M.", estrelas: 1, posicao: "Defensor", badges: [] },
+  { id: 44, nome: "Felipe Wolf", estrelas: 1, posicao: "Meia", badges: [] },
 ];
 
 const MESES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
