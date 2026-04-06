@@ -446,20 +446,30 @@ function initPlayerCards() {
     const initials = player.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
     const avatarContent = photo
       ? `<img src="${photo}" alt="${player.nome}">`
-      : `<span style="font-size:1.2rem;font-family:'Oswald',sans-serif;color:var(--text-muted)">${initials}</span>`;
+      : `<span class="fut-initials">${initials}</span>`;
     const badgesHtml = player.badges.map(b => `<span class="card-badge">${BADGE_LABELS[b] || b}</span>`).join('');
     const positions = getPlayerPositions(player.nome);
-    const posDisplay = positions.length > 0 ? positions.join(' · ') : player.posicao;
+    const posMain = positions.length > 0 ? positions[0] : (player.posicao || '');
+    const posAbbr = { 'Goleiro':'GOL','Zaga':'ZAG','Lateral':'LAT','Volante':'VOL','Meio-campo':'MEI','Atacante':'ATA','Defensor':'DEF','Meia':'MEI','Meia/Atacante':'MEI','Meia/Defensor':'MEI' };
+    const posTag = posAbbr[posMain] || posMain.substring(0,3).toUpperCase();
     card.innerHTML = `
-      <div class="card-avatar">${avatarContent}</div>
-      <div class="card-name">${player.nome}</div>
-      <div class="card-position">${posDisplay}</div>
-      ${badgesHtml ? `<div class="card-badges">${badgesHtml}</div>` : ''}
-      <div class="card-mini-stats">
-        <div class="card-mini-stat"><span class="card-mini-stat-value">${stats.golsTotal}</span><span class="card-mini-stat-label">Gols</span></div>
-        <div class="card-mini-stat"><span class="card-mini-stat-value">${stats.vitoriasTotal}</span><span class="card-mini-stat-label">Vitórias</span></div>
-        <div class="card-mini-stat"><span class="card-mini-stat-value">${stats.jogosTotal}</span><span class="card-mini-stat-label">Jogos</span></div>
-        ${stats.mvpTotal > 0 ? `<div class="card-mini-stat"><span class="card-mini-stat-value" style="color:var(--gold)">${stats.mvpTotal}</span><span class="card-mini-stat-label">MVP</span></div>` : ''}
+      <div class="fut-card-inner">
+        <div class="fut-card-top">
+          <div class="fut-card-info">
+            <span class="fut-card-pos">${posTag}</span>
+          </div>
+          <div class="fut-card-photo">${avatarContent}</div>
+        </div>
+        <div class="fut-card-bottom">
+          <div class="fut-card-name">${player.nome}</div>
+          ${badgesHtml ? `<div class="card-badges">${badgesHtml}</div>` : ''}
+          <div class="fut-card-stats">
+            <div class="fut-stat"><span class="fut-stat-val">${stats.golsTotal}</span><span class="fut-stat-lbl">GOL</span></div>
+            <div class="fut-stat"><span class="fut-stat-val">${stats.vitoriasTotal}</span><span class="fut-stat-lbl">VIT</span></div>
+            <div class="fut-stat"><span class="fut-stat-val">${stats.jogosTotal}</span><span class="fut-stat-lbl">JGS</span></div>
+            ${stats.mvpTotal > 0 ? `<div class="fut-stat fut-stat-mvp"><span class="fut-stat-val">${stats.mvpTotal}</span><span class="fut-stat-lbl">MVP</span></div>` : ''}
+          </div>
+        </div>
       </div>`;
     card.addEventListener('click', () => openModal(player));
     grid.appendChild(card);
