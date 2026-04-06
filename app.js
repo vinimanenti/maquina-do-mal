@@ -541,6 +541,7 @@ function getPlayerStats(nome) {
     vitoriasTotal: (pc26 ? pc26.v : 0) + matchStats.vitorias,
     jogosTotal: (pc26 ? pc26.pd : 0) + matchStats.jogos,
     mvpTotal: totalMvp,
+    gols2026Meses: a26 ? a26.meses : [],
     matchGols: matchStats.gols,
     matchVitorias: matchStats.vitorias,
     matchJogos: matchStats.jogos,
@@ -624,12 +625,13 @@ function openModal(player) {
     evoChart.appendChild(group);
   });
 
-  // Monthly Chart
+  // Monthly Chart — Gols 2026
   const chartContainer = document.getElementById('modalChart');
   chartContainer.innerHTML = '';
-  const meses = stats.gols2024Meses.length > 0 ? stats.gols2024Meses : stats.gols2025Meses;
-  const labels = stats.gols2024Meses.length > 0 ? MESES : MESES.slice(0, 7);
-  document.getElementById('modalChartTitle').textContent = stats.gols2024Meses.length > 0 ? 'Desempenho Mensal — Gols 2024' : stats.gols2025Meses.length > 0 ? 'Desempenho Mensal — Gols 2025' : 'Desempenho Mensal';
+  const meses = stats.gols2026Meses || [];
+  const mesesLabels = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+  const labels = mesesLabels.slice(0, meses.length);
+  document.getElementById('modalChartTitle').textContent = meses.length > 0 ? 'Desempenho Mensal — Gols 2026' : 'Desempenho Mensal';
   if (meses.length > 0) {
     const maxVal = Math.max(...meses, 1);
     meses.forEach((val, i) => {
