@@ -391,15 +391,18 @@ const PHOTO_FILE_MAP = {
 };
 
 function loadPlayerPhotos() {
-  window._playerPhotos = LS.get('photos', {});
+  // Limpar cache antigo de fotos (JPEG com fundo preto)
+  LS.remove('photos');
+  LS.remove('processedPhotos');
+  window._playerPhotos = {};
 }
 
 function getPlayerPhoto(nome) {
-  // Check localStorage first (admin uploads)
-  const stored = window._playerPhotos[normalizeName(nome)];
-  if (stored) return stored;
-  // Fall back to file in project folder
-  const mapped = PHOTO_FILE_MAP[normalizeName(nome)];
+  const key = normalizeName(nome);
+  // Check admin uploads
+  if (window._playerPhotos[key]) return window._playerPhotos[key];
+  // Use file from project folder
+  const mapped = PHOTO_FILE_MAP[key];
   return (mapped || nome) + '.png';
 }
 
