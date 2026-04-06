@@ -89,7 +89,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
   position: relative; aspect-ratio: 0.716; border-radius: 0; cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s, filter 0.3s; overflow: visible;
   background: transparent; border: none; padding: 0;
+  margin-top: 0;
 }
+.player-card.card-leader { margin-top: 22px; }
 .player-card:hover { transform: translateY(-8px) scale(1.04); filter: brightness(1.05); }
 .player-card.card-leader { filter: brightness(1.03) drop-shadow(0 0 12px rgba(212,160,23,0.35)); }
 
@@ -131,30 +133,36 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 
 /* Bottom half — name + stats */
 .fut-card-bottom {
-  flex: 0.65; display: flex; flex-direction: column; align-items: center;
+  flex: 0.6; display: flex; flex-direction: column; align-items: center;
   justify-content: center; text-align: center;
-  padding: 0 10% 10%;
+  padding: 0 12% 12%;
 }
 .fut-card-name {
-  font-family: 'Oswald', sans-serif; font-size: 0.85rem; font-weight: 700;
+  font-family: 'Oswald', sans-serif; font-size: 0.8rem; font-weight: 700;
   color: #2a2015; text-transform: uppercase; letter-spacing: 1.5px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 100%; line-height: 1.2;
+  max-width: 100%; line-height: 1.1;
 }
 .fut-card-name::after {
   content: ''; display: block; width: 60%; height: 1px; margin: 2px auto 0;
   background: linear-gradient(90deg, transparent, rgba(140,110,50,0.5), transparent);
 }
 
-.card-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; margin: 3px 0 0; }
+/* Badges — floating above the card */
+.card-badges {
+  position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;
+  z-index: 10; white-space: nowrap;
+}
 .card-badge {
-  display: inline-block; padding: 1px 6px; font-size: 0.45rem; border-radius: 50px;
-  background: rgba(140,100,20,0.12); color: #6b5010; border: 1px solid rgba(140,100,20,0.25);
-  font-weight: 600; letter-spacing: 0.3px;
+  display: inline-block; padding: 3px 10px; font-size: 0.55rem; border-radius: 50px;
+  background: linear-gradient(135deg, #D4A017, #b8860b); color: #fff;
+  border: 1px solid rgba(212,160,23,0.5); font-weight: 700; letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(212,160,23,0.4); text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .fut-card-stats {
-  display: flex; justify-content: center; gap: 0; margin-top: 5px; width: 100%;
+  display: flex; justify-content: center; gap: 0; margin-top: 4px; width: 100%;
 }
 .fut-stat {
   display: flex; flex-direction: column; align-items: center; flex: 1;
@@ -162,11 +170,11 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 }
 .fut-stat:last-child { border-right: none; }
 .fut-stat-val {
-  font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 700;
-  color: #2a2015; line-height: 1.15;
+  font-family: 'Oswald', sans-serif; font-size: 0.9rem; font-weight: 700;
+  color: #2a2015; line-height: 1.1;
 }
 .fut-stat-lbl {
-  font-size: 0.4rem; font-weight: 700; color: #6b5a3a; text-transform: uppercase;
+  font-size: 0.38rem; font-weight: 700; color: #6b5a3a; text-transform: uppercase;
   letter-spacing: 0.8px;
 }
 .fut-stat-mvp .fut-stat-val { color: #8B6914; }

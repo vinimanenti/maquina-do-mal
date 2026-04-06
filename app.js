@@ -453,6 +453,7 @@ function initPlayerCards() {
     const posAbbr = { 'Goleiro':'GOL','Zaga':'ZAG','Lateral':'LAT','Volante':'VOL','Meio-campo':'MEI','Atacante':'ATA','Defensor':'DEF','Meia':'MEI','Meia/Atacante':'MEI','Meia/Defensor':'MEI' };
     const posTag = posAbbr[posMain] || posMain.substring(0,3).toUpperCase();
     card.innerHTML = `
+      ${badgesHtml ? `<div class="card-badges">${badgesHtml}</div>` : ''}
       <div class="fut-card-inner">
         <div class="fut-card-top">
           <div class="fut-card-info">
@@ -462,7 +463,6 @@ function initPlayerCards() {
         </div>
         <div class="fut-card-bottom">
           <div class="fut-card-name">${player.nome}</div>
-          ${badgesHtml ? `<div class="card-badges">${badgesHtml}</div>` : ''}
           <div class="fut-card-stats">
             <div class="fut-stat"><span class="fut-stat-val">${stats.golsTotal}</span><span class="fut-stat-lbl">GOL</span></div>
             <div class="fut-stat"><span class="fut-stat-val">${stats.vitoriasTotal}</span><span class="fut-stat-lbl">VIT</span></div>
