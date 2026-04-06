@@ -1866,7 +1866,7 @@ function renderAdminPlayers() {
           const ctx = canvas.getContext('2d');
           const min = Math.min(img.width, img.height);
           ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, 200, 200);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          const dataUrl = canvas.toDataURL('image/png');
           savePlayerPhoto(playerName, dataUrl);
           item.querySelector('.admin-player-photo').innerHTML = `<img src="${dataUrl}" alt="">`;
           initPlayerCards();
