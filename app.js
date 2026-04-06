@@ -1858,8 +1858,41 @@ function renderAdminPlayers() {
       if (!file) return;
       const playerName = this.dataset.playerName;
       const photoEl = item.querySelector('.admin-player-photo');
+      photoEl.innerHTML = '<span style="font-size:0.7rem;color:var(--text-muted)">Processando...</span>';
 
-      function resizeAndSave(imgSrc) {
+      function removeDarkBg(canvas) {
+        const ctx = canvas.getContext('2d');
+        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const d = img.data;
+        const w = canvas.width, h = canvas.height;
+        const darkLimit = 50;
+        const visited = new Uint8Array(w * h);
+        const queue = [];
+        function tryAdd(i) {
+          if (i < 0 || i >= w * h || visited[i]) return;
+          const p = i * 4;
+          if ((d[p] + d[p+1] + d[p+2]) / 3 < darkLimit) {
+            visited[i] = 1;
+            d[p+3] = 0;
+            queue.push(i);
+          }
+        }
+        for (let x = 0; x < w; x++) { tryAdd(x); tryAdd((h-1)*w + x); }
+        for (let y = 0; y < h; y++) { tryAdd(y*w); tryAdd(y*w + w-1); }
+        let head = 0;
+        while (head < queue.length) {
+          const i = queue[head++];
+          const x = i % w, y = (i / w) | 0;
+          if (x > 0) tryAdd(i-1);
+          if (x < w-1) tryAdd(i+1);
+          if (y > 0) tryAdd(i-w);
+          if (y < h-1) tryAdd(i+w);
+        }
+        ctx.putImageData(img, 0, 0);
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(ev) {
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
@@ -1867,26 +1900,13 @@ function renderAdminPlayers() {
           const ctx = canvas.getContext('2d');
           const min = Math.min(img.width, img.height);
           ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, 300, 300);
+          removeDarkBg(canvas);
           const dataUrl = canvas.toDataURL('image/png');
           savePlayerPhoto(playerName, dataUrl);
           photoEl.innerHTML = `<img src="${dataUrl}" alt="">`;
           initPlayerCards();
         };
-        img.src = imgSrc;
-      }
-
-      const reader = new FileReader();
-      reader.onload = async function(ev) {
-        photoEl.innerHTML = '<span style="font-size:0.7rem;color:var(--text-muted)">Removendo fundo...</span>';
-        try {
-          const { removeBackground } = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm');
-          const blob = await removeBackground(ev.target.result, { model: 'small' });
-          const url = URL.createObjectURL(blob);
-          resizeAndSave(url);
-        } catch(e) {
-          console.warn('Remoção de fundo falhou, usando original:', e);
-          resizeAndSave(ev.target.result);
-        }
+        img.src = ev.target.result;
       };
       reader.readAsDataURL(file);
     });
