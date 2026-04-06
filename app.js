@@ -716,13 +716,6 @@ function buildMvpRanking() {
 function initAwards() {
   const grid = document.getElementById('awardsGrid');
   const awards = [
-    { icon: '⚽', title: 'Artilheiro', player: 'Léo Alves', detail: '41 gols', season: '2024', year: 'y2024' },
-    { icon: '🏆', title: 'Mais Vitórias', player: 'Manenti', detail: '29 vitórias', season: '2024', year: 'y2024' },
-    { icon: '📅', title: 'Mais Presente', player: 'Juninho', detail: '49 jogos', season: '2024', year: 'y2024' },
-    { icon: '🔥', title: 'Revelação', player: 'Gui Magalhães', detail: '28 gols (12 em Jan)', season: '2024', year: 'y2024' },
-    { icon: '⚽', title: 'Artilheiro', player: 'Kaue Love', detail: '23 gols', season: '2025', year: 'y2025' },
-    { icon: '🎯', title: 'Garçom/Decisivo', player: 'Bruninho', detail: '18 gols (vice-artilheiro)', season: '2025', year: 'y2025' },
-    { icon: '💫', title: 'Revelação', player: 'Caporalini', detail: '9 gols (estreia)', season: '2025', year: 'y2025' },
     { icon: '⚽', title: 'Artilheiro', player: 'Douglas Almeida', detail: '18 gols em 11 jogos', season: '2026', year: 'y2026' },
     { icon: '👑', title: 'Líder Pontos Corridos', player: 'Bruninho', detail: '24 pontos · 66.7%', season: '2026', year: 'y2026' },
     { icon: '📈', title: 'Maior Aproveitamento', player: 'Marcos Vinícius', detail: '72.2% · 6 jogos', season: '2026', year: 'y2026' },
