@@ -383,11 +383,11 @@ const PHOTO_FILE_MAP = {
   'douglas almeida': 'Douglas A.',
   'danilo melo': 'Danilo',
   'biga': 'G. Biga',
-  'márcio': 'Márcio P.',
+  'marcio': 'Márcio P.',
   'gio coutinho': 'Coutinho',
-  'gui magalhães': 'Magalhães',
+  'gui magalhaes': 'Magalhães',
   'matheus ribeiro': 'M. Ribeiro',
-  'marcos vinícius': 'Marcos Vinicius'
+  'marcos vinicius': 'Marcos Vinicius'
 };
 
 function loadPlayerPhotos() {
