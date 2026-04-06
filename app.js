@@ -439,6 +439,9 @@ function initPlayerCards() {
     card.className = `player-card star-${player.estrelas}`;
     card.dataset.stars = player.estrelas;
     card.dataset.playerName = player.nome;
+    const playerPositions = getPlayerPositions(player.nome);
+    const posBase = playerPositions.length > 0 ? playerPositions.join(',') : (player.posicao || '');
+    card.dataset.position = posBase;
     const initials = player.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
     const avatarContent = photo
       ? `<img src="${photo}" alt="${player.nome}">`
@@ -467,7 +470,19 @@ function initPlayerCards() {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const f = btn.dataset.filter;
-      document.querySelectorAll('.player-card').forEach(c => c.style.display = (f === 'all' || c.dataset.stars === f) ? '' : 'none');
+      const posMap = {
+        'Goleiro': ['goleiro'],
+        'Defensor': ['defensor', 'zaga', 'lateral', 'defesa'],
+        'Meia': ['meia', 'volante', 'meio-campo', 'meio', 'meia/defensor', 'meia/atacante'],
+        'Atacante': ['atacante']
+      };
+      document.querySelectorAll('.player-card').forEach(c => {
+        if (f === 'all') { c.style.display = ''; return; }
+        const pos = (c.dataset.position || '').toLowerCase();
+        const terms = posMap[f] || [f.toLowerCase()];
+        const match = terms.some(t => pos.includes(t));
+        c.style.display = match ? '' : 'none';
+      });
     });
   });
 }
