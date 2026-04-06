@@ -1783,7 +1783,7 @@ function renderAdminPlayers() {
             ${photo ? `<img src="${photo}" alt="">` : initials}
           </div>
           <button class="admin-player-photo-btn" data-player-name="${p.nome}" title="Alterar foto"><i class="fas fa-camera"></i></button>
-          <input type="file" accept="image/*" style="display:none" class="admin-photo-input" data-player-name="${p.nome}">
+          <input type="file" accept="image/png" style="display:none" class="admin-photo-input" data-player-name="${p.nome}">
         </div>
         <div class="admin-player-info">
           <div class="admin-player-name-display">
@@ -1860,47 +1860,19 @@ function renderAdminPlayers() {
       const photoEl = item.querySelector('.admin-player-photo');
       photoEl.innerHTML = '<span style="font-size:0.7rem;color:var(--text-muted)">Processando...</span>';
 
-      function removeDarkBg(canvas) {
-        const ctx = canvas.getContext('2d');
-        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const d = img.data;
-        const w = canvas.width, h = canvas.height;
-        const darkLimit = 50;
-        const visited = new Uint8Array(w * h);
-        const queue = [];
-        function tryAdd(i) {
-          if (i < 0 || i >= w * h || visited[i]) return;
-          const p = i * 4;
-          if ((d[p] + d[p+1] + d[p+2]) / 3 < darkLimit) {
-            visited[i] = 1;
-            d[p+3] = 0;
-            queue.push(i);
-          }
-        }
-        for (let x = 0; x < w; x++) { tryAdd(x); tryAdd((h-1)*w + x); }
-        for (let y = 0; y < h; y++) { tryAdd(y*w); tryAdd(y*w + w-1); }
-        let head = 0;
-        while (head < queue.length) {
-          const i = queue[head++];
-          const x = i % w, y = (i / w) | 0;
-          if (x > 0) tryAdd(i-1);
-          if (x < w-1) tryAdd(i+1);
-          if (y > 0) tryAdd(i-w);
-          if (y < h-1) tryAdd(i+w);
-        }
-        ctx.putImageData(img, 0, 0);
-      }
-
       const reader = new FileReader();
       reader.onload = function(ev) {
         const img = new Image();
         img.onload = function() {
+          const maxW = 400;
+          const scale = Math.min(maxW / img.width, maxW / img.height, 1);
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
           const canvas = document.createElement('canvas');
-          canvas.width = 300; canvas.height = 300;
+          canvas.width = w; canvas.height = h;
           const ctx = canvas.getContext('2d');
-          const min = Math.min(img.width, img.height);
-          ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, 300, 300);
-          removeDarkBg(canvas);
+          ctx.clearRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
           const dataUrl = canvas.toDataURL('image/png');
           savePlayerPhoto(playerName, dataUrl);
           photoEl.innerHTML = `<img src="${dataUrl}" alt="">`;
