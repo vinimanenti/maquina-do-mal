@@ -263,14 +263,14 @@ const PLAYERS_DATABASE = {
 // ===== ELENCO CONSOLIDADO COM STAR RATING =====
 // Rating baseado em: gols totais, vitórias, presença, pontos corridos
 const ELENCO = [
-  { id: 1, nome: "Bruninho", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2025","lider-2026"] },
-  { id: 2, nome: "Kaue Love", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2025"] },
+  { id: 1, nome: "Bruninho", estrelas: 5, posicao: "Atacante", badges: ["lider-2026"] },
+  { id: 2, nome: "Kaue Love", estrelas: 5, posicao: "Atacante", badges: [] },
   { id: 3, nome: "Douglas Almeida", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2026"] },
   { id: 4, nome: "Danilo Melo", estrelas: 4, posicao: "Meia/Atacante", badges: [] },
   { id: 5, nome: "Léo Kekel", estrelas: 4, posicao: "Meia", badges: [] },
   { id: 6, nome: "Guedes", estrelas: 4, posicao: "Meia/Atacante", badges: [] },
-  { id: 7, nome: "Manenti", estrelas: 4, posicao: "Meia", badges: ["mais-vitorias-2024"] },
-  { id: 8, nome: "Juninho", estrelas: 4, posicao: "Meia", badges: ["mais-presente-2024"] },
+  { id: 7, nome: "Manenti", estrelas: 4, posicao: "Meia", badges: [] },
+  { id: 8, nome: "Juninho", estrelas: 4, posicao: "Meia", badges: [] },
   { id: 9, nome: "Gaia", estrelas: 4, posicao: "Atacante", badges: [] },
   { id: 10, nome: "Velto", estrelas: 4, posicao: "Atacante", badges: [] },
   { id: 11, nome: "Maico", estrelas: 4, posicao: "Meia/Defensor", badges: [] },
@@ -304,16 +304,12 @@ const ELENCO = [
   { id: 39, nome: "Renato Reis", estrelas: 2, posicao: "Goleiro", badges: [] },
   { id: 40, nome: "Diego Farias", estrelas: 1, posicao: "Meia", badges: [] },
   { id: 41, nome: "Tiaguinho", estrelas: 1, posicao: "Defensor", badges: [] },
-  { id: 42, nome: "Léo Alves", estrelas: 5, posicao: "Atacante", badges: ["artilheiro-2024"] },
+  { id: 42, nome: "Léo Alves", estrelas: 5, posicao: "Atacante", badges: [] },
 ];
 
 const MESES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
 const BADGE_LABELS = {
-  "artilheiro-2024": "🏆 Artilheiro 2024",
-  "artilheiro-2025": "🏆 Artilheiro 2025",
   "artilheiro-2026": "🏆 Artilheiro 2026",
   "lider-2026": "👑 Líder PC 2026",
-  "mais-vitorias-2024": "🥇 Mais Vitórias 2024",
-  "mais-presente-2024": "📅 Mais Presente 2024",
 };
