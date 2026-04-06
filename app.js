@@ -436,7 +436,8 @@ function initPlayerCards() {
     const stats = getPlayerStats(player.nome);
     const photo = getPlayerPhoto(player.nome);
     const card = document.createElement('div');
-    card.className = `player-card star-${player.estrelas}`;
+    const isLeader = player.badges && player.badges.length > 0;
+    card.className = `player-card${isLeader ? ' card-leader' : ''}`;
     card.dataset.stars = player.estrelas;
     card.dataset.playerName = player.nome;
     const playerPositions = getPlayerPositions(player.nome);
