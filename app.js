@@ -1857,21 +1857,36 @@ function renderAdminPlayers() {
       const file = this.files[0];
       if (!file) return;
       const playerName = this.dataset.playerName;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
+      const photoEl = item.querySelector('.admin-player-photo');
+
+      function resizeAndSave(imgSrc) {
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          canvas.width = 200; canvas.height = 200;
+          canvas.width = 300; canvas.height = 300;
           const ctx = canvas.getContext('2d');
           const min = Math.min(img.width, img.height);
-          ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, 200, 200);
+          ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, 300, 300);
           const dataUrl = canvas.toDataURL('image/png');
           savePlayerPhoto(playerName, dataUrl);
-          item.querySelector('.admin-player-photo').innerHTML = `<img src="${dataUrl}" alt="">`;
+          photoEl.innerHTML = `<img src="${dataUrl}" alt="">`;
           initPlayerCards();
         };
-        img.src = ev.target.result;
+        img.src = imgSrc;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async function(ev) {
+        photoEl.innerHTML = '<span style="font-size:0.7rem;color:var(--text-muted)">Removendo fundo...</span>';
+        try {
+          const { removeBackground } = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm');
+          const blob = await removeBackground(ev.target.result, { model: 'small' });
+          const url = URL.createObjectURL(blob);
+          resizeAndSave(url);
+        } catch(e) {
+          console.warn('Remoção de fundo falhou, usando original:', e);
+          resizeAndSave(ev.target.result);
+        }
       };
       reader.readAsDataURL(file);
     });
