@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mdm-v1';
+const CACHE_NAME = 'mdm-v2';
 const ASSETS = [
   '/',
   '/index.html',
