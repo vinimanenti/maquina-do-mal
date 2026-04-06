@@ -1858,27 +1858,12 @@ function renderAdminPlayers() {
       if (!file) return;
       const playerName = this.dataset.playerName;
       const photoEl = item.querySelector('.admin-player-photo');
-      photoEl.innerHTML = '<span style="font-size:0.7rem;color:var(--text-muted)">Processando...</span>';
-
       const reader = new FileReader();
       reader.onload = function(ev) {
-        const img = new Image();
-        img.onload = function() {
-          const maxW = 400;
-          const scale = Math.min(maxW / img.width, maxW / img.height, 1);
-          const w = Math.round(img.width * scale);
-          const h = Math.round(img.height * scale);
-          const canvas = document.createElement('canvas');
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.clearRect(0, 0, w, h);
-          ctx.drawImage(img, 0, 0, w, h);
-          const dataUrl = canvas.toDataURL('image/png');
-          savePlayerPhoto(playerName, dataUrl);
-          photoEl.innerHTML = `<img src="${dataUrl}" alt="">`;
-          initPlayerCards();
-        };
-        img.src = ev.target.result;
+        const dataUrl = ev.target.result;
+        savePlayerPhoto(playerName, dataUrl);
+        photoEl.innerHTML = `<img src="${dataUrl}" alt="">`;
+        initPlayerCards();
       };
       reader.readAsDataURL(file);
     });
