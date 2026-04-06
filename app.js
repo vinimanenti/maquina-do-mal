@@ -379,12 +379,28 @@ function animateCounter(el, target) {
 }
 
 // ===== PLAYER PHOTOS =====
+const PHOTO_FILE_MAP = {
+  'douglas almeida': 'Douglas A.',
+  'danilo melo': 'Danilo',
+  'biga': 'G. Biga',
+  'márcio': 'Márcio P.',
+  'gio coutinho': 'Coutinho',
+  'gui magalhães': 'Magalhães',
+  'matheus ribeiro': 'M. Ribeiro',
+  'marcos vinícius': 'Marcos Vinicius'
+};
+
 function loadPlayerPhotos() {
   window._playerPhotos = LS.get('photos', {});
 }
 
 function getPlayerPhoto(nome) {
-  return window._playerPhotos[normalizeName(nome)] || null;
+  // Check localStorage first (admin uploads)
+  const stored = window._playerPhotos[normalizeName(nome)];
+  if (stored) return stored;
+  // Fall back to file in project folder
+  const mapped = PHOTO_FILE_MAP[normalizeName(nome)];
+  return (mapped || nome) + '.png';
 }
 
 function savePlayerPhoto(nome, dataUrl) {
@@ -445,7 +461,7 @@ function initPlayerCards() {
     card.dataset.position = posBase;
     const initials = player.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
     const avatarContent = photo
-      ? `<img src="${photo}" alt="${player.nome}">`
+      ? `<img src="${photo}" alt="${player.nome}" onerror="this.parentElement.innerHTML='<span class=\\'fut-initials\\'>${initials}</span>'">`
       : `<span class="fut-initials">${initials}</span>`;
     const badgesHtml = player.badges.map(b => `<span class="card-badge">${BADGE_LABELS[b] || b}</span>`).join('');
     const positions = getPlayerPositions(player.nome);
@@ -578,7 +594,7 @@ function openModal(player) {
   const stats = getPlayerStats(player.nome);
   const photo = getPlayerPhoto(player.nome);
   const initials = player.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-  document.getElementById('modalAvatar').innerHTML = photo ? `<img src="${photo}" alt="">` : `<span style="font-size:1.8rem;font-family:'Oswald',sans-serif">${initials}</span>`;
+  document.getElementById('modalAvatar').innerHTML = photo ? `<img src="${photo}" alt="" onerror="this.parentElement.innerHTML='<span style=\\'font-size:1.8rem;font-family:Oswald,sans-serif\\'>${initials}</span>'">` : `<span style="font-size:1.8rem;font-family:'Oswald',sans-serif">${initials}</span>`;
   document.getElementById('modalName').textContent = player.nome;
   document.getElementById('modalStars').innerHTML = '';
   const badgeEl = document.getElementById('modalBadge');
