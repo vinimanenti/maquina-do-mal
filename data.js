@@ -3,8 +3,9 @@
 // ============================================================
 
 const PLAYERS_DATABASE = {
+  // ===== DADOS HISTÓRICOS (mantidos para referência futura) =====
   // ===== GOLS 2024 =====
-  gols2024: [
+  _gols2024: [
     { nome: "Léo Alves", meses: [5,7,3,6,9,6,2,0,2,0,1,0], total: 41 },
     { nome: "Kaue Love", meses: [11,3,4,7,0,6,2,0,0,0,1,2], total: 36 },
     { nome: "Gui Magalhães", meses: [12,0,0,0,0,5,3,0,0,0,8,0], total: 28 },
@@ -38,7 +39,7 @@ const PLAYERS_DATABASE = {
   ],
 
   // ===== VITÓRIAS 2024 =====
-  vitorias2024: [
+  _vitorias2024: [
     { nome: "Manenti", meses: [4,3,0,4,5,2,2,4,2,2,1,0], total: 29 },
     { nome: "Léo Alves", meses: [1,3,2,4,4,3,0,2,2,2,0,0], total: 23 },
     { nome: "Márcio", meses: [5,2,1,1,3,1,2,3,2,1,0,0], total: 21 },
@@ -75,7 +76,7 @@ const PLAYERS_DATABASE = {
   ],
 
   // ===== JOGOS 2024 =====
-  jogos2024: [
+  _jogos2024: [
     { nome: "Juninho", meses: [5,4,4,5,5,5,4,4,4,5,3,1], total: 49 },
     { nome: "Léo Kekel", meses: [5,4,4,5,5,5,4,4,3,5,3,1], total: 48 },
     { nome: "Manenti", meses: [5,4,4,5,5,5,4,4,4,4,3,1], total: 48 },
@@ -112,7 +113,7 @@ const PLAYERS_DATABASE = {
   ],
 
   // ===== GOLS 2025 =====
-  gols2025: [
+  _gols2025: [
     { nome: "Kaue Love", meses: [0,6,2,4,2,1,8], total: 23 },
     { nome: "Bruninho", meses: [0,5,3,0,2,3,5], total: 18 },
     { nome: "Danilo Melo", meses: [3,2,2,2,2,4,0], total: 15 },

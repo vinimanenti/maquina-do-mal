@@ -453,7 +453,6 @@ function initPlayerCards() {
       <div class="card-avatar">${avatarContent}</div>
       <div class="card-name">${player.nome}</div>
       <div class="card-position">${posDisplay}</div>
-      <div class="card-stars">${renderStars(player.estrelas)}</div>
       ${badgesHtml ? `<div class="card-badges">${badgesHtml}</div>` : ''}
       <div class="card-mini-stats">
         <div class="card-mini-stat"><span class="card-mini-stat-value">${stats.golsTotal}</span><span class="card-mini-stat-label">Gols</span></div>
@@ -493,10 +492,6 @@ function renderStars(count) {
 
 function getPlayerStats(nome) {
   const find = (arr, n) => arr.find(p => normalizeName(p.nome) === normalizeName(n));
-  const g24 = find(PLAYERS_DATABASE.gols2024, nome);
-  const v24 = find(PLAYERS_DATABASE.vitorias2024, nome);
-  const j24 = find(PLAYERS_DATABASE.jogos2024, nome);
-  const g25 = find(PLAYERS_DATABASE.gols2025, nome);
   const pc26 = find(PLAYERS_DATABASE.pontosCorridos2026, nome);
   const a26 = find(PLAYERS_DATABASE.artilharia2026, nome);
 
@@ -509,15 +504,12 @@ function getPlayerStats(nome) {
   const totalMvp = baseMvp + matchStats.mvps;
 
   return {
-    gols2024: g24 ? g24.total : 0, gols2024Meses: g24 ? g24.meses : [],
-    vitorias2024: v24 ? v24.total : 0, jogos2024: j24 ? j24.total : 0,
-    gols2025: g25 ? g25.total : 0, gols2025Meses: g25 ? g25.meses : [],
     gols2026: (a26 ? a26.gols : 0) + matchStats.gols, pontos2026: pc26 ? pc26.pts : 0,
     apr2026: pc26 ? pc26.apr : 0, v2026: (pc26 ? pc26.v : 0) + matchStats.vitorias,
     e2026: pc26 ? pc26.e : 0, d2026: pc26 ? pc26.d : 0, pd2026: (pc26 ? pc26.pd : 0) + matchStats.jogos,
-    golsTotal: (g24 ? g24.total : 0) + (g25 ? g25.total : 0) + (a26 ? a26.gols : 0) + matchStats.gols,
-    vitoriasTotal: (v24 ? v24.total : 0) + (pc26 ? pc26.v : 0) + matchStats.vitorias,
-    jogosTotal: (j24 ? j24.total : 0) + (pc26 ? pc26.pd : 0) + matchStats.jogos,
+    golsTotal: (a26 ? a26.gols : 0) + matchStats.gols,
+    vitoriasTotal: (pc26 ? pc26.v : 0) + matchStats.vitorias,
+    jogosTotal: (pc26 ? pc26.pd : 0) + matchStats.jogos,
     mvpTotal: totalMvp,
     matchGols: matchStats.gols,
     matchVitorias: matchStats.vitorias,
@@ -577,14 +569,10 @@ function openModal(player) {
   const initials = player.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   document.getElementById('modalAvatar').innerHTML = photo ? `<img src="${photo}" alt="">` : `<span style="font-size:1.8rem;font-family:'Oswald',sans-serif">${initials}</span>`;
   document.getElementById('modalName').textContent = player.nome;
-  document.getElementById('modalStars').innerHTML = renderStars(player.estrelas);
+  document.getElementById('modalStars').innerHTML = '';
   const badgeEl = document.getElementById('modalBadge');
   if (player.badges.length > 0) { badgeEl.textContent = BADGE_LABELS[player.badges[0]] || ''; badgeEl.style.display = ''; }
   else badgeEl.style.display = 'none';
-  document.getElementById('modalGols2024').textContent = stats.gols2024;
-  document.getElementById('modalVitorias2024').textContent = stats.vitorias2024;
-  document.getElementById('modalJogos2024').textContent = stats.jogos2024;
-  document.getElementById('modalGols2025').textContent = stats.gols2025;
   document.getElementById('modalGols2026').textContent = stats.gols2026;
   document.getElementById('modalPontos2026').textContent = stats.pontos2026;
   document.getElementById('modalMvp').textContent = stats.mvpTotal;
@@ -593,9 +581,7 @@ function openModal(player) {
   const evoChart = document.getElementById('modalEvolutionChart');
   evoChart.innerHTML = '';
   const evoData = [
-    { label: '2024', value: stats.gols2024, color: 'red' },
-    { label: '2025', value: stats.gols2025, color: 'gold' },
-    { label: '2026', value: stats.gols2026, color: 'blue' },
+    { label: '2026', value: stats.gols2026, color: 'var(--red-bright)' },
   ];
   const evoMax = Math.max(...evoData.map(d => d.value), 1);
   evoData.forEach(d => {
@@ -680,17 +666,6 @@ function initStatsTables() {
     <td><span class="pos-badge pos-${i <= 2 ? i + 1 : ''}">${i + 1}</span></td><td>${p.nome}</td>
     <td>${p.pd}</td><td style="font-weight:700;color:var(--gold)">${p.mvps}</td>
     <td>${p.pd > 0 ? ((p.mvps / p.pd) * 100).toFixed(0) + '%' : '—'}</td>`);
-  fillTable('tableGols2025', PLAYERS_DATABASE.gols2025.filter(p => p.total > 0), (p, i) => `
-    <td><span class="pos-badge pos-${i <= 2 ? i + 1 : ''}">${i + 1}</span></td><td>${p.nome}</td>
-    <td style="font-weight:700;color:var(--red-bright)">${p.total}</td>${p.meses.map(m => `<td>${m || '-'}</td>`).join('')}`);
-  fillTable('tableGols2024', PLAYERS_DATABASE.gols2024.filter(p => p.total > 0), (p, i) => {
-    const dm = [0,1,2,3,4,5,6,8,10,11].map(idx => p.meses[idx] || '-');
-    return `<td><span class="pos-badge pos-${i <= 2 ? i + 1 : ''}">${i + 1}</span></td><td>${p.nome}</td>
-    <td style="font-weight:700;color:var(--red-bright)">${p.total}</td>${dm.map(m => `<td>${m}</td>`).join('')}`;
-  });
-  fillTable('tableVit2024', PLAYERS_DATABASE.vitorias2024.filter(p => p.total > 0), (p, i) => `
-    <td><span class="pos-badge pos-${i <= 2 ? i + 1 : ''}">${i + 1}</span></td><td>${p.nome}</td>
-    <td style="font-weight:700;color:var(--red-bright)">${p.total}</td>${p.meses.slice(0, 11).map(m => `<td>${m || '-'}</td>`).join('')}`);
 }
 
 function fillTable(tableId, data, rowRenderer) {
@@ -1096,17 +1071,12 @@ function renderComparison(name1, name2) {
 
   // Define comparison stats
   const stats = [
-    { label: 'Estrelas', icon: 'fa-star', v1: p1.estrelas, v2: p2.estrelas, higher: true },
+    { label: 'Gols 2026', icon: 'fa-futbol', v1: s1.gols2026, v2: s2.gols2026, higher: true },
+    { label: 'Pontos 2026', icon: 'fa-chart-line', v1: s1.pontos2026, v2: s2.pontos2026, higher: true },
+    { label: 'MVP', icon: 'fa-medal', v1: s1.mvpTotal, v2: s2.mvpTotal, higher: true },
     { label: 'Gols Total', icon: 'fa-futbol', v1: s1.golsTotal, v2: s2.golsTotal, higher: true },
     { label: 'Vitórias Total', icon: 'fa-trophy', v1: s1.vitoriasTotal, v2: s2.vitoriasTotal, higher: true },
     { label: 'Jogos Total', icon: 'fa-calendar-check', v1: s1.jogosTotal, v2: s2.jogosTotal, higher: true },
-    { label: 'MVP', icon: 'fa-medal', v1: s1.mvpTotal, v2: s2.mvpTotal, higher: true },
-    { label: 'Gols 2024', icon: 'fa-futbol', v1: s1.gols2024, v2: s2.gols2024, higher: true },
-    { label: 'Vitórias 2024', icon: 'fa-trophy', v1: s1.vitorias2024, v2: s2.vitorias2024, higher: true },
-    { label: 'Jogos 2024', icon: 'fa-calendar', v1: s1.jogos2024, v2: s2.jogos2024, higher: true },
-    { label: 'Gols 2025', icon: 'fa-futbol', v1: s1.gols2025, v2: s2.gols2025, higher: true },
-    { label: 'Gols 2026', icon: 'fa-futbol', v1: s1.gols2026, v2: s2.gols2026, higher: true },
-    { label: 'Pontos 2026', icon: 'fa-chart-line', v1: s1.pontos2026, v2: s2.pontos2026, higher: true },
   ];
 
   // Count wins
@@ -1144,8 +1114,6 @@ function renderComparison(name1, name2) {
 
   // Evolution chart (goals by year)
   const evoYears = [
-    { label: '2024', v1: s1.gols2024, v2: s2.gols2024 },
-    { label: '2025', v1: s1.gols2025, v2: s2.gols2025 },
     { label: '2026', v1: s1.gols2026, v2: s2.gols2026 },
   ];
   const evoMax = Math.max(...evoYears.flatMap(y => [y.v1, y.v2]), 1);
@@ -1168,14 +1136,12 @@ function renderComparison(name1, name2) {
           <div class="compare-avatar">${photo1 ? `<img src="${photo1}" alt="">` : initials1}</div>
           <div class="compare-name">${name1}</div>
           <div class="compare-pos">${pos1.length > 0 ? pos1.join(' · ') : p1.posicao}</div>
-          <div class="compare-stars">${'★'.repeat(p1.estrelas)}${'☆'.repeat(5 - p1.estrelas)}</div>
         </div>
         <div class="compare-vs-divider"><div class="compare-vs-badge">VS</div></div>
         <div class="compare-player-header right">
           <div class="compare-avatar">${photo2 ? `<img src="${photo2}" alt="">` : initials2}</div>
           <div class="compare-name">${name2}</div>
           <div class="compare-pos">${pos2.length > 0 ? pos2.join(' · ') : p2.posicao}</div>
-          <div class="compare-stars">${'★'.repeat(p2.estrelas)}${'☆'.repeat(5 - p2.estrelas)}</div>
         </div>
       </div>
       <div class="compare-stats">${rowsHtml}</div>
