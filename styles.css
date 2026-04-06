@@ -101,9 +101,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 
 /* Top half — photo area */
 .fut-card-top {
-  flex: 1.15; display: flex; align-items: flex-end; justify-content: center;
+  flex: 1; display: flex; align-items: flex-end; justify-content: center;
   position: relative; overflow: hidden;
-  padding: 10% 12% 0;
+  padding: 8% 12% 0;
 }
 .fut-card-info {
   position: absolute; top: 10%; left: 10%; display: flex; flex-direction: column;
@@ -131,18 +131,18 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 
 /* Bottom half — name + stats */
 .fut-card-bottom {
-  flex: 0.55; display: flex; flex-direction: column; align-items: center;
+  flex: 0.65; display: flex; flex-direction: column; align-items: center;
   justify-content: center; text-align: center;
-  padding: 0 10% 8%;
+  padding: 0 10% 10%;
 }
 .fut-card-name {
-  font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 700;
-  color: #2a2015; text-transform: uppercase; letter-spacing: 2px;
+  font-family: 'Oswald', sans-serif; font-size: 0.85rem; font-weight: 700;
+  color: #2a2015; text-transform: uppercase; letter-spacing: 1.5px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   max-width: 100%; line-height: 1.2;
 }
 .fut-card-name::after {
-  content: ''; display: block; width: 60%; height: 1px; margin: 3px auto 0;
+  content: ''; display: block; width: 60%; height: 1px; margin: 2px auto 0;
   background: linear-gradient(90deg, transparent, rgba(140,110,50,0.5), transparent);
 }
 
@@ -162,11 +162,11 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 }
 .fut-stat:last-child { border-right: none; }
 .fut-stat-val {
-  font-family: 'Oswald', sans-serif; font-size: 1.15rem; font-weight: 700;
+  font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 700;
   color: #2a2015; line-height: 1.15;
 }
 .fut-stat-lbl {
-  font-size: 0.45rem; font-weight: 700; color: #6b5a3a; text-transform: uppercase;
+  font-size: 0.4rem; font-weight: 700; color: #6b5a3a; text-transform: uppercase;
   letter-spacing: 0.8px;
 }
 .fut-stat-mvp .fut-stat-val { color: #8B6914; }
